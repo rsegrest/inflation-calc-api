@@ -1,6 +1,6 @@
 import json
 from data.cpidata import CPI_DATA
-
+from util.query_data import get_historical_cpi
 # FORMULAS:
 # calculateCompoundInterest: CI = P x (1 + r/n)^nt
 # futureValueOfASeries : FV = PMT x (((1 + r/n)^nt - 1) / (r/n))
@@ -34,9 +34,9 @@ def lost_value_over_time(from_year, to_year, from_month = 0, to_month = 0):
     for i in range(from_year, to_year + 1):
         this_cpi = get_historical_cpi(i, to_month)
         value_array.append({
-            year: i,
-            cpi: this_cpi,
-            value: (first_cpi_value / this_cpi),
+            'year': i,
+            'cpi': this_cpi,
+            'value': (first_cpi_value / this_cpi),
         })
     return value_array
 
