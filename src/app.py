@@ -1,17 +1,27 @@
-from src.util.formulas import calculate_timespan_months
-from src.util.formulas import calculate_inflation_rate
-from src.util.query_data import get_historical_cpi
-from src.util.formulas import calculate_loss_percentage
-from src.util.formulas import adjust_figure_with_inflation
-from src.util.query_data import get_latest_month_with_data
-from src.util.date_helpers import get_current_year_int, get_current_month_int
-from flask import Flask
+from flask import Flask, jsonify
+from flask_cors import CORS
+
+from util.formulas import calculate_timespan_months
+from util.formulas import calculate_inflation_rate
+from util.query_data import get_historical_cpi
+from util.formulas import calculate_loss_percentage
+from util.formulas import adjust_figure_with_inflation
+from util.query_data import get_latest_month_with_data
+from util.date_helpers import get_current_year_int, get_current_month_int
 
 app = Flask(__name__)
+CORS(app)
+# CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
 
 @app.route("/")
+
 def hello_world():
     return "<p>Hello, World!</p>"
+
+@app.route("/hello", methods=["GET"])
+def get_example():
+    response = jsonify(message="Hello from Flask!")
+    return response
 
 # @app.route('/cpi/<from_year>/<to_year>/<from_month>/<to_month>')
 @app.route('/cpi/<starting_amount>/<from_year>', defaults={'to_year': get_current_year_int(), 'from_month': 0, 'to_month': get_current_month_int()})
@@ -71,4 +81,3 @@ if __name__ == "__main__":
 
 #     const [timePeriodInMonths, setTimePeriodInMonths] = React.useState(calculateTimespanMonths(startYear, startZeroBasedMonth, endYear, endZeroBasedMonth));
 #     const [lostValue, setLostValue] = React.useState(calculateLossPercentage(historicalStartCpi, historicalEndCpi));
-
