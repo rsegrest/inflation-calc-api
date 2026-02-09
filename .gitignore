@@ -7,3 +7,4 @@ __pycache__
 .env
 TODO.*
 .DS_Store
+**/*/*.egg-info

@@ -1,0 +1,20 @@
+[project]
+name = "inflation-calc-api"
+version = "1.0.0"
+dependencies = [
+    "flask",
+    "flask_cors"
+]
+
+[project.scripts]
+inflation-calc-api = "app:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
