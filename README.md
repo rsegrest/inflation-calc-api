@@ -13,7 +13,6 @@ If no end date is given, the API will make calculations based on the latest avai
 
 Create a virtual environment, install the dependencies from requirements.txt, and then run the Flask server.
 
-
 ### Linux / MacOS
 ```bash
 python -m pip venv {name_of_venv}
@@ -27,6 +26,13 @@ python -m pip venv {name_of_venv}
 .\{name_of_venv}\bin\Activate.ps1
 pip install -r requirements.txt
 python ./src/app.py
+```
+
+## Docker Installation
+
+```bash
+docker build -t inflation-calc-api .
+docker run -p 5050:5050 inflation-calc-api
 ```
 
 ## Usage
