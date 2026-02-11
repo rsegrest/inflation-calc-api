@@ -15,7 +15,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Expose the port the app runs on
-EXPOSE 5050
+EXPOSE 5000
 
 # Define the command to run the application using a production server like Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5050", "src.app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.app:app"]

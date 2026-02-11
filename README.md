@@ -32,11 +32,11 @@ python ./src/app.py
 
 ```bash
 docker build -t inflation-calc-api .
-docker run -p 5050:5050 inflation-calc-api
+docker run -p 5000:5000 inflation-calc-api
 ```
 
 ## Usage
 
 ```text
-http://127.0.0.1:5050/cpi?starting_amount=10000&from_month=0&from_year=2019&to_month=2&to_year=2026
+http://127.0.0.1:5000/cpi?starting_amount=10000&from_month=0&from_year=2019&to_month=2&to_year=2026
 ```
