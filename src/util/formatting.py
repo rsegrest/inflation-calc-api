@@ -2,7 +2,7 @@ def express_as_percentage(figure, digits = 2):
     return str(round(figure, digits)) + '%'
 
 def express_as_dollars(figure):
-    formatted_string = f"{figure:,}"
+    formatted_string = f"{figure:,.2f}"
     return '$'+formatted_string
 
 def get_months():
