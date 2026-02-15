@@ -8,3 +8,4 @@ __pycache__
 TODO.*
 .DS_Store
 **/*/*.egg-info
+reproduce_issue.py

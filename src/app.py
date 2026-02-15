@@ -22,22 +22,29 @@ def usage():
 def cpi():
     if request.method == 'POST':
         data = request.get_json()
-        starting_amount = data['starting_amount']
-        from_year = data['from_year']
-        to_year = data['to_year']
-        from_month = data['from_month']
-        to_month = data['to_month']
+        starting_amount = data.get('starting_amount')
+        from_year = data.get('from_year')
+        to_year = data.get('to_year')
+        from_month = data.get('from_month')
+        to_month = data.get('to_month')
     else:
         starting_amount = request.args.get('starting_amount')
         from_year = request.args.get('from_year')
         to_year = request.args.get('to_year')
         from_month = request.args.get('from_month')
         to_month = request.args.get('to_month')
-    starting_amount = int(starting_amount)
-    from_year = int(from_year)
-    to_year = int(to_year)
-    from_month = int(from_month)
-    to_month = int(to_month)
+
+    if any(v is None for v in [starting_amount, from_year, to_year, from_month, to_month]):
+        return jsonify(error="Missing required arguments"), 400
+
+    try:
+        starting_amount = float(starting_amount)
+        from_year = int(from_year)
+        to_year = int(to_year)
+        from_month = int(from_month)
+        to_month = int(to_month)
+    except ValueError:
+        return jsonify(error="Arguments must be numbers"), 400
     if from_year < 1913:
         from_year = 1913
     if to_year < 1913:
