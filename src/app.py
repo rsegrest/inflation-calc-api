@@ -13,16 +13,11 @@ app = Flask(__name__)
 CORS(app)
 
 @app.route("/")
+def usage():
+    return """
+    <p>Inflation Calculator API</p><p>Use the /cpi endpoint to calculate the inflation-adjusted value of a given amount of money.</p><p>Example: <a href="/cpi?starting_amount=1000&from_year=2000&from_month=1&to_year=2025&to_month=1">/cpi?starting_amount=1000&from_year=2000&from_month=1&to_year=2025&to_month=1</a></p>
+    """
 
-def hello_world():
-    return "<p>Hello, World!</p>"
-
-@app.route("/hello", methods=["GET"])
-def get_example():
-    response = jsonify(message="Hello from Flask!")
-    return response
-
-# @app.route('/cpi/<from_year>/<to_year>/<from_month>/<to_month>')
 @app.route('/cpi', methods=['GET', 'POST'])
 def cpi():
     if request.method == 'POST':
