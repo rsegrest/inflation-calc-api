@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+from data.cpidata import CPI_DATA
 from util.formulas import calculate_timespan_months
 from util.formulas import calculate_inflation_rate
 from util.query_data import get_historical_cpi
@@ -17,6 +18,10 @@ def usage():
     return """
     <p>Inflation Calculator API</p><p>Use the /cpi endpoint to calculate the inflation-adjusted value of a given amount of money.</p><p>Example: <a href="/cpi?starting_amount=1000&from_year=2000&from_month=1&to_year=2025&to_month=1">/cpi?starting_amount=1000&from_year=2000&from_month=1&to_year=2025&to_month=1</a></p>
     """
+
+@app.route('/cpi-data', methods=['GET'])
+def cpi_data():
+    return jsonify(CPI_DATA)
 
 @app.route('/cpi', methods=['GET', 'POST'])
 def cpi():
