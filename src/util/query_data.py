@@ -1,6 +1,6 @@
 import json
 from data.cpidata import CPI_DATA
-from util.date_helpers import get_current_year_int
+from util.date_helpers import get_current_month_int, get_current_year_int
 
 def get_historical_cpi(year, month):
     cpi_data_string = json.dumps(CPI_DATA)
@@ -20,6 +20,5 @@ def get_latest_month_with_data(current_month, year):
     return {'year':latest_year,'month':latest_month}
 
 def get_present_cpi():
-    current_month = 0
-    latest_date_with_data = get_latest_month_with_data(current_month, get_current_year_int())
+    latest_date_with_data = get_latest_month_with_data(get_current_month_int(), get_current_year_int())
     return get_historical_cpi(latest_date_with_data['year'], latest_date_with_data['month'])

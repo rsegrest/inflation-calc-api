@@ -70,15 +70,18 @@ doesn't have to derive it from the whole table.
 Tests: 7 added (series shape, series values, explicit-end-date honouring,
 aggregate figures, `/latest-data` against the query layer).
 
-## Known red tests (pre-existing, not introduced here)
+## Test suite: green
 
-Three tests fail on the wall clock, by their own admission ("will break at the
-end of the month/year"):
+All 26 pass. The three wall-clock time-bombs that always failed ("will break at
+the end of the month/year") now assert their relationship to the clock instead of
+a snapshot, so they stay valid in any month:
 
-- `test_date_helpers.py::test_get_current_month_int` (asserts February)
-- `test_date_helpers.py::test_get_current_month_string` (asserts February)
-- `test_query_data.py::test_get_present_cpi` (asserts 324.054)
+- date helper tests compare against `datetime.now()` and a local month-name list
+  rather than a hard-coded "February";
+- `get_year_range` is checked as a range from this year back to 1914.
 
-Also note `get_present_cpi()` starts from month `0`, so it reports January's CPI
-of the current year rather than the true latest month. It is currently unused by
-the API; `get_latest_month_with_data()` is what `/cpi` and `/latest-data` use.
+They surfaced a real bug: `get_present_cpi()` started its search at month `0`, so
+it reported *January's* CPI of the current year — `325.252` instead of the newest
+published figure `337.511`. It now starts from the actual current month, and a
+regression test derives the expected figure from the raw data table (not from the
+function under test) so the two can't agree with each other by accident.
