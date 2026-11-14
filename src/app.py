@@ -4,6 +4,7 @@ from flask_cors import CORS
 from data.cpidata import CPI_DATA
 from util.formulas import calculate_timespan_months
 from util.formulas import calculate_inflation_rate
+from util.formulas import monthly_value_series
 from util.query_data import get_historical_cpi
 from util.formulas import calculate_loss_percentage
 from util.formulas import adjust_figure_with_inflation
@@ -22,6 +23,10 @@ def usage():
 @app.route('/cpi-data', methods=['GET'])
 def cpi_data():
     return jsonify(CPI_DATA)
+
+@app.route('/latest-data', methods=['GET'])
+def latest_data():
+    return jsonify(get_latest_month_with_data(get_current_month_int(), get_current_year_int()))
 
 @app.route('/cpi', methods=['GET', 'POST'])
 def cpi():
@@ -55,16 +60,11 @@ def cpi():
     if to_year < 1913:
         to_year = 1913
     latest_data = get_latest_month_with_data(to_month, to_year)
-    from_cpi = get_historical_cpi(from_year, from_month)
     to_month = latest_data['month']
     to_year = latest_data['year']
-    to_cpi = get_historical_cpi(to_year, to_month)
-    now_dollars = adjust_figure_with_inflation(starting_amount, from_cpi, to_cpi)
-    lost_value = calculate_loss_percentage(get_historical_cpi(from_year, from_month), get_historical_cpi(to_year, to_month))
+
     historical_start_cpi = get_historical_cpi(from_year, from_month)
     historical_end_cpi = get_historical_cpi(to_year, to_month)
-    inflation_rate = calculate_inflation_rate(historical_start_cpi, historical_end_cpi)
-    time_period_in_months = calculate_timespan_months(from_year, from_month, to_year, to_month)
 
     return {
         'starting_amount': starting_amount,
@@ -74,14 +74,14 @@ def cpi():
         'end_month': to_month,
         'latest_data_month': latest_data['month'],
         'latest_data_year': latest_data['year'],
-        'lost_value': lost_value,
-        'now_dollars': now_dollars,
+        'lost_value': calculate_loss_percentage(historical_start_cpi, historical_end_cpi),
+        'now_dollars': adjust_figure_with_inflation(starting_amount, historical_start_cpi, historical_end_cpi),
         'historical_start_cpi': historical_start_cpi,
         'historical_end_cpi': historical_end_cpi,
-        'inflation_rate': inflation_rate,
-        'time_period_in_months': time_period_in_months,
+        'inflation_rate': calculate_inflation_rate(historical_start_cpi, historical_end_cpi),
+        'time_period_in_months': calculate_timespan_months(from_year, from_month, to_year, to_month),
+        'series': monthly_value_series(from_year, from_month, to_year, to_month),
     }
-    return 'None'
 
 def main():
     app.run(debug=True, port=5000)
